@@ -14,7 +14,7 @@ class Server:
         # get local machine name
         host = socket.gethostname()
         
-        #host = "192.168.2.31"
+        #host = "192.168.2.2"
         #host = "192.168.2.1"
         port = 9999
 
@@ -66,7 +66,9 @@ class Server:
     def Receive(self):
         while not self.quit:
                 received = self.clientsocket.recv(1024).decode("ascii")
-                print(received)
+                
+                rd = received.split(":")
+                print(rd[0],rd[1])
                 if received == "quit":
                     self.quit = True
                     break
