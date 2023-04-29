@@ -14,7 +14,7 @@ class Server:
         # get local machine name
         host = socket.gethostname()
         
-        #host = "192.168.2.2"
+        #host = "192.168.2.31"
         #host = "192.168.2.1"
         port = 9999
 
@@ -23,15 +23,18 @@ class Server:
 
         # become a server socket
         self.serversocket.listen(1)
-        self.cap = cv2.VideoCapture(0)
+        self.cap = None
         print("Waiting for incoming connections...")
+
 
         
     def connect(self):
         # establish a connection
         self.clientsocket, self.addr = self.serversocket.accept()
+        
     def Send(self):
         print("Got a connection from %s" % str(self.addr))
+        self.cap = cv2.VideoCapture(0)
         # create a VideoCapture object to capture frames from the webcam or video file
         
         msg = {}
@@ -59,6 +62,7 @@ class Server:
         print("SOMETHING Wrong")
         # close the connection
         self.clientsocket.close()
+        self.cap.release()
             
         
                 
@@ -66,9 +70,7 @@ class Server:
     def Receive(self):
         while not self.quit:
                 received = self.clientsocket.recv(1024).decode("ascii")
-                
-                rd = received.split(":")
-                print(rd[0],rd[1])
+                print(received)
                 if received == "quit":
                     self.quit = True
                     break
@@ -81,8 +83,9 @@ if __name__ == "__main__":
     
     
     while not s.quit:
-        s.connect()
-        rx = threading.Thread(target=s.Receive)
-        rx.start()
-        s.Send()
+
+                s.connect()
+                """rx = threading.Thread(target=s.Receive)
+                rx.start()"""
+                s.Send()
 
